@@ -16,8 +16,8 @@
 Repository: https://github.com/personjc/udacity/tree/master/Project1
 
 ###Files
-Expected files include:
-	* entertainment_center.py
-	* fresh_tomatoes.py
-	* media.py
-	* README.md
+Expected files
+* entertainment_center.py
+* fresh_tomatoes.py
+* media.py
+* README.md

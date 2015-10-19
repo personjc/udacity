@@ -1,6 +1,10 @@
 import media
 import fresh_tomatoes
 
+"""
+Displays the given movies. Runs fresh_tomatoes.  
+"""
+
 days_of_summer = media.Movie("500 Days of Summer",
                         "This is a story of boy meets girl, but this is not a love story.",
                         "https://upload.wikimedia.org/wikipedia/en/d/d1/Five_hundred_days_of_summer.jpg",

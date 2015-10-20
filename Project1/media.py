@@ -1,5 +1,6 @@
 import webbrowser
 
+
 class Movie():
     """ Movie object for the entertainment center
 
@@ -10,8 +11,13 @@ class Movie():
         trailer_youtube: url of the movie trailer
         year: release year for the movie
     """
-    def __init__(self, movie_title, movie_storyline, poster_image, trailer_youtube, year):
-        """initializes movie object taking in all required attributes"""
+    def __init__(self,
+                 movie_title,
+                 movie_storyline,
+                 poster_image,
+                 trailer_youtube,
+                 year):
+        """initialize movie object taking in all required attributes"""
         self.title = movie_title
         self.storyline = movie_storyline
         self.poster_image_url = poster_image

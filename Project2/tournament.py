@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python 
 # 
 # tournament.py -- implementation of a Swiss-system tournament
 #
@@ -13,24 +13,31 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = psycopg2.connect("dbname=tournament")
+    conn = connect()
     c = conn.cursor()
-    c.exectute('DELETE FROM Matches;')
+    c.execute('DELETE FROM Matches;')
     conn.commit()
     conn.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-
+    conn = connect()
+    c = conn.cursor()
+    c.execute('DELETE FROM players;')
+    conn.commit()
+    conn.close()
+	
 
 def countPlayers():
     """Returns the number of players currently registered."""
-	conn = connect()
+    conn = connect()
     c = conn.cursor()
-    c.exectute('SELECT COUNT(players.id) AS NUM FROM Players;')
+    c.execute('SELECT COUNT(*) AS NUM FROM players;')
+    count = c.fetchall()
     conn.commit()
     conn.close()
+    return count[0][0]
 	
 
 
@@ -43,7 +50,11 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-
+    conn = connect()
+    c = conn.cursor()
+    c.execute('INSERT INTO players (name) VALUES (%s);', (name,))
+    conn.commit()
+    conn.close()
 
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
@@ -58,6 +69,9 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    conn = connect()
+    c = conn.cursor()
+    c.execute('')
 
 
 def reportMatch(winner, loser):

@@ -14,19 +14,32 @@ name text);
 --Create matches
 CREATE TABLE matches (
 id serial primary key,
-player_one text foreign key,
-player_two text foreign key,
-result text);
+winner integer REFERENCES players (id),
+loser integer REFERENCES players (id));
 
 --create records
 CREATE TABLE records (
-player_id serial primary key,
-record text);
+player_id integer REFERENCES players (id),
+wins integer,
+losses integer);
 
-CREATE VIEW player_card (
-SELECT p.id, p.name, r.record 
-FROM players p
-JOIN records r on
-p.id = r.player_id);
+--Get info
+SELECT p.id, p.name, COUNT(m.winner) AS wins, COUNT(m.loser) as losses
+FROM players p JOIN matches m
+ON p.id = m.winner
+group by p.id
+ORDER BY wins DESC, losses asc;
+
+SELECT * 
+FROM players p, 
+(SELECT COUNT(*) FROM matches m GROUP BY m.winner) as wins,
+(SELECT COUNT(*) FROM matches m GROUP BY m.loser) as losses
+
+
+  
+
+
+
+
 
 

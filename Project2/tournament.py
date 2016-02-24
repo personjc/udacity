@@ -72,6 +72,7 @@ def playerStandings():
     conn = connect()
     c = conn.cursor()
     c.execute('')
+    
 
 
 def reportMatch(winner, loser):

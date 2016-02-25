@@ -74,10 +74,12 @@ def playerStandings():
     #Gets ID and winners
     c.execute("SELECT players.id, players.name, \
             (SELECT COUNT(winner_id) as wins FROM matches m where players.id = m.winner_id) as wins, \
-            (SELECT COUNT(loser_id) as losses FROM matches m where players.id = m.loser_id) as losses \
-            FROM players;")
-    return c.fetchall()
-    
+            ((SELECT COUNT(winner_id) as wins FROM matches m where players.id = m.winner_id) + \
+            (SELECT COUNT(loser_id) as losses FROM matches m where players.id = m.loser_id)) as matchTotal \
+            FROM players ORDER BY wins desc, matchTotal asc;")
+    rows = c.fetchall()
+    conn.close()
+    return rows
 
 
 def reportMatch(winner, loser):
@@ -108,5 +110,9 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    
+    rows = playerStandings()
+    row = 
+    
 
 

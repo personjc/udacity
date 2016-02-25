@@ -14,8 +14,8 @@ name text);
 --Create matches
 CREATE TABLE matches (
 id serial primary key,
-winner_id integer REFERENCES players (id),
-loser_id integer REFERENCES players (id));
+winner_id integer,
+loser_id integer );
 
 --Get info
 SELECT players.id, players.name,

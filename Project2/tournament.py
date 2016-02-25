@@ -71,7 +71,12 @@ def playerStandings():
     """
     conn = connect()
     c = conn.cursor()
-    c.execute('')
+    #Gets ID and winners
+    c.execute("SELECT players.id, players.name, \
+            (SELECT COUNT(winner_id) as wins FROM matches m where players.id = m.winner_id) as wins, \
+            (SELECT COUNT(loser_id) as losses FROM matches m where players.id = m.loser_id) as losses \
+            FROM players;")
+    return c.fetchall()
     
 
 
@@ -82,7 +87,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
- 
+    conn = connect()
+    c = conn.cursor()
+    c.execute('INSERT INTO matches (winner_id, loser_id) VALUES (%d, %d);' % (winner, loser))
+    conn.commit()
+    conn.close()
  
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.

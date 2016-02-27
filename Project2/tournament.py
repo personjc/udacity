@@ -1,7 +1,7 @@
 #!/usr/bin/env python 
 # 
 # tournament.py -- implementation of a Swiss-system tournament
-#
+# Author - John Person
 
 import psycopg2
 

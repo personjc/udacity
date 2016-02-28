@@ -17,7 +17,7 @@ id serial primary key,
 winner_id integer,
 loser_id integer );
 
---Get info
+--Get standings of players
 SELECT players.id, players.name,
     (SELECT COUNT(winner) as wins FROM matches m where players.id = m.winner) as wins, 
     (SELECT COUNT(loser) as losses FROM matches m where players.id = m.loser) as losses

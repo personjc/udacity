@@ -6,6 +6,9 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
+DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS matches;
+
 --Create players
 CREATE TABLE players (
 id serial primary key,
@@ -14,15 +17,8 @@ name text);
 --Create matches
 CREATE TABLE matches (
 id serial primary key,
-winner_id integer,
-loser_id integer );
-
---Get standings of players
-SELECT players.id, players.name,
-    (SELECT COUNT(winner) as wins FROM matches m where players.id = m.winner) as wins, 
-    (SELECT COUNT(loser) as losses FROM matches m where players.id = m.loser) as losses
-FROM players;
-
+winner_id integer references players.id,
+loser_id integer references players.id);
 
   
 

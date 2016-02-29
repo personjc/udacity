@@ -112,7 +112,19 @@ def swissPairings():
     """
     
     rows = playerStandings()
-    row = 
+    extraPlayer = len(rows) % 2
+    loops = len(rows) / 2
+    matchList = []
+    playerOneItr = 0
+    
+    for i in range(loops):
+        playerOne = rows[playerOneItr]
+        playerTwo = rows[playerOneItr + 1]
+        matchList.append([playerOne[0], playerOne[1], playerTwo[0], playerTwo[1]])
+        playerOneItr = playerOneItr + 2
+     
+    return matchList
+    
     
 
 

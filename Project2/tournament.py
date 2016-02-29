@@ -15,7 +15,7 @@ def deleteMatches():
     """Remove all the match records from the database."""
     conn = connect()
     c = conn.cursor()
-    c.execute('DELETE FROM Matches;')
+    c.execute('DELETE FROM matches;')
     conn.commit()
     conn.close()
 
@@ -71,12 +71,7 @@ def playerStandings():
     """
     conn = connect()
     c = conn.cursor()
-    #Gets ID and winners
-    c.execute("SELECT players.id, players.name, \
-            (SELECT COUNT(winner_id) as wins FROM matches m where players.id = m.winner_id) as wins, \
-            ((SELECT COUNT(winner_id) as wins FROM matches m where players.id = m.winner_id) + \
-            (SELECT COUNT(loser_id) as losses FROM matches m where players.id = m.loser_id)) as matchTotal \
-            FROM players ORDER BY wins desc, matchTotal asc;")
+    c.execute("SELECT * FROM player_standings;")
     rows = c.fetchall()
     conn.close()
     return rows
@@ -112,11 +107,11 @@ def swissPairings():
     """
     
     rows = playerStandings()
-    extraPlayer = len(rows) % 2
     loops = len(rows) / 2
     matchList = []
     playerOneItr = 0
     
+    """Compiles matches into one list"""
     for i in range(loops):
         playerOne = rows[playerOneItr]
         playerTwo = rows[playerOneItr + 1]

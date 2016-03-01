@@ -26,3 +26,8 @@ Expected files
 ###Additional Functionality
 * Added view for player standings
 * Refactored to include primary and foreign keys
+
+###References
+* Refactored code per udacity review
+* http://thecodeship.com/patterns/guide-to-python-function-decorators/
+* https://docs.python.org/2/library/contextlib.html

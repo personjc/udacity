@@ -4,40 +4,35 @@
 # Author - John Person
 
 import psycopg2
+from contextlib import contextmanager
 
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+    try:
+        return psycopg2.connect("dbname=tournament")
+    except:
+        print("Connection to database failed")
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute('DELETE FROM matches;')
-    conn.commit()
-    conn.close()
+    with get_cursor() as cursor:
+        cursor.execute('DELETE FROM matches;')
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute('DELETE FROM players;')
-    conn.commit()
-    conn.close()
+    with get_cursor() as cursor:
+        cursor.execute('DELETE FROM players;')
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    conn = connect()
-    c = conn.cursor()
-    c.execute('SELECT COUNT(*) AS NUM FROM players;')
-    count = c.fetchall()
-    conn.commit()
-    conn.close()
-    return count[0][0]
+    with get_cursor() as cursor:
+        cursor.execute('SELECT COUNT(*) AS NUM FROM players;')
+        count = cursor.fetchall()
+        return count[0][0]
 
 
 def registerPlayer(name):
@@ -49,11 +44,8 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn = connect()
-    c = conn.cursor()
-    c.execute('INSERT INTO players (name) VALUES (%s);', (name,))
-    conn.commit()
-    conn.close()
+    with get_cursor() as cursor:
+        cursor.execute('INSERT INTO players (name) VALUES (%s);', (name,))
 
 
 def playerStandings():
@@ -69,12 +61,10 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    conn = connect()
-    c = conn.cursor()
-    c.execute("SELECT * FROM player_standings;")
-    rows = c.fetchall()
-    conn.close()
-    return rows
+    with get_cursor() as cursor:
+        cursor.execute("SELECT * FROM player_standings;")
+        rows = cursor.fetchall()
+        return rows
 
 
 def reportMatch(winner, loser):
@@ -84,12 +74,9 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    conn = connect()
-    c = conn.cursor()
-    c.execute('INSERT INTO matches (winner_id, loser_id)  \
-                    VALUES (%d, %d);' % (winner, loser))
-    conn.commit()
-    conn.close()
+    with get_cursor() as cursor:
+        cursor.execute('INSERT INTO matches (winner_id, loser_id)  \
+                    VALUES (%s, %s);', (winner, loser))
 
 
 def swissPairings():
@@ -107,20 +94,35 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
     rows = playerStandings()
-    loops = len(rows) / 2
     match_list = []
-    itr = 0
 
     """Compiles matches into one list"""
-    for i in range(loops):
-        player_one = rows[itr]
-        player_two = rows[itr + 1]
+    for i in range(0, len(rows) / 2):
+        player_one = rows[2 * i]
+        player_two = rows[2 * i + 1]
 
         match_list.append(
                 [player_one[0], player_one[1], player_two[0], player_two[1]]
          )
-        itr = itr + 2
 
     return match_list
+
+
+@contextmanager
+def get_cursor():
+    """
+    Query helper function using context lib. Creates a cursor from a database
+    connection object, and performs queries using that cursor.
+    """
+    conn = connect()
+    cursor = conn.cursor()
+    try:
+        yield cursor
+    except:
+        raise
+    else:
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()

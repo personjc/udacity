@@ -4,6 +4,7 @@
 # Author - John Person
 
 import psycopg2
+import random
 from contextlib import contextmanager
 
 
@@ -75,8 +76,14 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     with get_cursor() as cursor:
-        cursor.execute('INSERT INTO matches (winner_id, loser_id)  \
-                    VALUES (%s, %s);', (winner, loser))
+        cursor.execute("INSERT INTO matches (winner_id, loser_id, bye)  \
+                    VALUES (%s, %s, false);", (winner, loser,))
+
+
+def reportByeMatch(player_id):
+    with get_cursor() as cursor:
+        cursor.execute("INSERT INTO matches (winner_id, bye)  \
+                    VALUES (%s, true);", (player_id,))
 
 
 def swissPairings():
@@ -97,6 +104,18 @@ def swissPairings():
     rows = playerStandings()
     match_list = []
 
+    """ If there are an odd number of players,
+         assign bye to random player who has not received one yet
+    """
+    if len(rows) % 2 == 1:
+        while True:
+            row_num = random.randint(0, len(rows) - 1)
+            if awardedBye(rows[row_num][0]) == False:
+                break
+
+        reportByeMatch(rows[row_num][0])
+        del rows[row_num]
+
     """Compiles matches into one list"""
     for i in range(0, len(rows) / 2):
         player_one = rows[2 * i]
@@ -107,6 +126,17 @@ def swissPairings():
          )
 
     return match_list
+
+
+def awardedBye(player_id):
+    with get_cursor() as cursor:
+        cursor.execute('SELECT bye FROM matches  \
+            WHERE bye = true AND winner_id = %s', (player_id,))
+
+        if len(cursor.fetchall()) == 1:
+            return True
+        else:
+            return False
 
 
 @contextmanager

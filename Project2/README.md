@@ -26,7 +26,7 @@ Expected files
 ###Additional Functionality
 * Added view for player standings
 * Refactored to include primary and foreign keys
-* Added bye match logic to deal with an odd number of tournament entries
+* Added bye match logic to deal with an odd number of player entries
 
 ###References
 * Refactored code following guidelines from udacity review

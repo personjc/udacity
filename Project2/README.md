@@ -26,8 +26,9 @@ Expected files
 ###Additional Functionality
 * Added view for player standings
 * Refactored to include primary and foreign keys
+* Added bye match logic to deal with an odd number of tournament entries
 
 ###References
-* Refactored code per udacity review
+* Refactored code following guidelines from udacity review
 * http://thecodeship.com/patterns/guide-to-python-function-decorators/
 * https://docs.python.org/2/library/contextlib.html

@@ -23,7 +23,8 @@ name text);
 CREATE TABLE matches (
 id serial primary key,
 winner_id integer references players (id),
-loser_id integer references players (id));
+loser_id integer references players (id),
+bye boolean);
 
 CREATE VIEW player_standings AS
     SELECT players.id, 
